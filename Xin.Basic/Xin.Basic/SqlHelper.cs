@@ -109,6 +109,29 @@ namespace Xin.Basic
             return ExecuteScalar(connectionString, cmdText, cmdParameters);
         }
         #endregion
+        #region ExecuteList
+        public static List<T> ExecuteList<T>(string connectionString, CommandType cmdType, string cmdText, params SqlParameter[] cmdParameters) where T : class, new()
+        {
+            DataTable dt = ExecuteDataTable(connectionString, cmdType, cmdText, cmdParameters);
+            return dt.GetList<T>();
+        }
+
+        public static List<T> ExecuteList<T>(string connectionString, string cmdText, params SqlParameter[] cmdParameters) where T : class, new()
+        {
+            DataTable dt = ExecuteDataTable(connectionString, cmdText, cmdParameters);
+            return dt.GetList<T>();
+        }
+
+        public static List<T> ExecuteList<T>(CommandType cmdType, string cmdText, params SqlParameter[] cmdParameters) where T : class, new()
+        {
+            return ExecuteList<T>(connectionString, cmdType, cmdText, cmdParameters);
+        }
+
+        public static List<T> ExecuteList<T>(string cmdText, params SqlParameter[] cmdParameters) where T : class, new()
+        {
+            return ExecuteList<T>(connectionString, cmdText, cmdParameters);
+        }
+        #endregion
         #region ExecuteDataTable
         public static DataTable ExecuteDataTable(string connectionString, CommandType cmdType, string cmdText, params SqlParameter[] cmdParameters)
         {
