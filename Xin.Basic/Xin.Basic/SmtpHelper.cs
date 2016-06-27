@@ -12,12 +12,14 @@ namespace Xin.Basic
         private static string host;
         private static string from;
         private static string password;
+        private static bool enableSsl;
 
         static SmtpHelper()
         {
             host = System.Configuration.ConfigurationManager.AppSettings["MailHost"];
             from = System.Configuration.ConfigurationManager.AppSettings["MailFrom"];
             password = System.Configuration.ConfigurationManager.AppSettings["MailPassword"];
+            enableSsl = Convert.ToBoolean(System.Configuration.ConfigurationManager.AppSettings["MailEnableSsl"]);
         }
 
         public static void Send(string subject, string body, params string[] to)
@@ -26,7 +28,7 @@ namespace Xin.Basic
             {
                 sc.Host = host;
                 sc.Credentials = new NetworkCredential(from, password);
-                sc.EnableSsl = true;
+                sc.EnableSsl = enableSsl;
 
                 MailMessage mm = new MailMessage();
                 mm.From = new MailAddress(from);
