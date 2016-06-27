@@ -52,6 +52,7 @@
     <Compile Include="LogHelper.cs" />
     <Compile Include="MemoryCacheHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SmtpHelper.cs" />
     <Compile Include="SqlHelper.cs" />
   </ItemGroup>
   <ItemGroup>
