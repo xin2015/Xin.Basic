@@ -8,7 +8,7 @@ using System.Text;
 namespace Xin.Basic
 {
     /// <summary>
-    /// log4net日志
+    /// log4net日志工具类
     /// </summary>
     public class LogHelper
     {

@@ -7,7 +7,7 @@ using System.Text;
 namespace Xin.Basic
 {
     /// <summary>
-    /// 内存缓存
+    /// 内存缓存工具类
     /// </summary>
     public class MemoryCacheHelper
     {

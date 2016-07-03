@@ -7,6 +7,9 @@ using System.Text;
 
 namespace Xin.Basic
 {
+    /// <summary>
+    /// 邮件工具类
+    /// </summary>
     public class SmtpHelper
     {
         private static string host;
@@ -22,7 +25,35 @@ namespace Xin.Basic
             enableSsl = Convert.ToBoolean(System.Configuration.ConfigurationManager.AppSettings["MailEnableSsl"]);
         }
 
-        public static void Send(string subject, string body, params string[] to)
+        /// <summary>
+        /// 发送邮件
+        /// </summary>
+        /// <param name="subject">主题</param>
+        /// <param name="body">正文</param>
+        /// <param name="to">收件人</param>
+        public static void Send(string subject, string body, string[] to)
+        {
+            using (SmtpClient sc = new SmtpClient())
+            {
+                sc.Host = host;
+                sc.Credentials = new NetworkCredential(from, password);
+                sc.EnableSsl = enableSsl;
+
+                MailMessage mm = new MailMessage();
+                mm.From = new MailAddress(from);
+                foreach (string toAddress in to)
+                {
+                    mm.To.Add(toAddress);
+                }
+                mm.Subject = subject;
+                mm.Body = body;
+
+                sc.Send(mm);
+                mm.Dispose();
+            }
+        }
+
+        public static void Send(string from, string[] to, string subject, string body, string[] cc, params Attachment[] attachment)
         {
             using (SmtpClient sc = new SmtpClient())
             {
