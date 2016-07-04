@@ -12,17 +12,49 @@ namespace Xin.Basic
     /// </summary>
     public class SmtpHelper
     {
-        private static string host;
-        private static string from;
-        private static string password;
-        private static bool enableSsl;
+        /// <summary>
+        /// 服务器
+        /// </summary>
+        public string Host { get; private set; }
+        /// <summary>
+        /// 用户名
+        /// </summary>
+        public string Username { get; private set; }
+        /// <summary>
+        /// 密码
+        /// </summary>
+        public string Password { get; private set; }
+        /// <summary>
+        /// 加密
+        /// </summary>
+        public bool EnableSsl { get; private set; }
+        /// <summary>
+        /// 默认实例，各项参数在配置文件中设置
+        /// </summary>
+        public static SmtpHelper Default { get; private set; }
 
         static SmtpHelper()
         {
-            host = System.Configuration.ConfigurationManager.AppSettings["MailHost"];
-            from = System.Configuration.ConfigurationManager.AppSettings["MailFrom"];
-            password = System.Configuration.ConfigurationManager.AppSettings["MailPassword"];
-            enableSsl = Convert.ToBoolean(System.Configuration.ConfigurationManager.AppSettings["MailEnableSsl"]);
+            string host = System.Configuration.ConfigurationManager.AppSettings["MailHost"];
+            string username = System.Configuration.ConfigurationManager.AppSettings["MailUsername"];
+            string password = System.Configuration.ConfigurationManager.AppSettings["MailPassword"];
+            bool enableSsl = bool.Parse(System.Configuration.ConfigurationManager.AppSettings["MailEnableSsl"]);
+            Default = new SmtpHelper(host, username, password, enableSsl);
+        }
+
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="host">服务器</param>
+        /// <param name="username">用户名</param>
+        /// <param name="password">密码</param>
+        /// <param name="enableSsl">加密</param>
+        public SmtpHelper(string host, string username, string password, bool enableSsl)
+        {
+            Host = host;
+            Username = username;
+            Password = password;
+            EnableSsl = enableSsl;
         }
 
         /// <summary>
@@ -31,16 +63,16 @@ namespace Xin.Basic
         /// <param name="subject">主题</param>
         /// <param name="body">正文</param>
         /// <param name="to">收件人</param>
-        public static void Send(string subject, string body, string[] to)
+        public void Send(string subject, string body, params string[] to)
         {
             using (SmtpClient sc = new SmtpClient())
             {
-                sc.Host = host;
-                sc.Credentials = new NetworkCredential(from, password);
-                sc.EnableSsl = enableSsl;
+                sc.Host = Host;
+                sc.Credentials = new NetworkCredential(Username, Password);
+                sc.EnableSsl = EnableSsl;
 
                 MailMessage mm = new MailMessage();
-                mm.From = new MailAddress(from);
+                mm.From = new MailAddress(Username);
                 foreach (string toAddress in to)
                 {
                     mm.To.Add(toAddress);
@@ -53,13 +85,22 @@ namespace Xin.Basic
             }
         }
 
-        public static void Send(string from, string[] to, string subject, string body, string[] cc, params Attachment[] attachment)
+        /// <summary>
+        /// 发送邮件
+        /// </summary>
+        /// <param name="from">发信人</param>
+        /// <param name="to">收件人</param>
+        /// <param name="subject">主题</param>
+        /// <param name="body">正文</param>
+        /// <param name="cc">抄送</param>
+        /// <param name="attachment">附件</param>
+        public void Send(string from, string[] to, string subject, string body, string[] cc, params Attachment[] attachment)
         {
             using (SmtpClient sc = new SmtpClient())
             {
-                sc.Host = host;
-                sc.Credentials = new NetworkCredential(from, password);
-                sc.EnableSsl = enableSsl;
+                sc.Host = Host;
+                sc.Credentials = new NetworkCredential(Username, Password);
+                sc.EnableSsl = EnableSsl;
 
                 MailMessage mm = new MailMessage();
                 mm.From = new MailAddress(from);
@@ -69,7 +110,21 @@ namespace Xin.Basic
                 }
                 mm.Subject = subject;
                 mm.Body = body;
-
+                if (cc != null)
+                {
+                    foreach(string item in cc)
+                    {
+                        mm.CC.Add(new MailAddress(item));
+                    }
+                }
+                if (attachment.Any())
+                {
+                    foreach(Attachment item in attachment)
+                    {
+                        mm.Attachments.Add(item);
+                    }
+                }
+                mm.Sender = new MailAddress(Username);
                 sc.Send(mm);
                 mm.Dispose();
             }
