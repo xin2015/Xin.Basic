@@ -41,7 +41,7 @@ namespace Xin.Basic
                         {
                             if (!Convert.IsDBNull(dr[property.Name]))
                             {
-                                property.SetValue(array[i], dr[property.Name], null);
+                                property.SetValue(array[i], dr[property.Name]);
                             }
                             i++;
                         }
@@ -54,7 +54,7 @@ namespace Xin.Basic
                             {
                                 try
                                 {
-                                    property.SetValue(array[i], Convert.ChangeType(dr[property.Name], underlyingType), null);
+                                    property.SetValue(array[i], Convert.ChangeType(dr[property.Name], underlyingType));
                                 }
                                 catch (Exception e)
                                 {
@@ -73,7 +73,7 @@ namespace Xin.Basic
                         {
                             if (!Convert.IsDBNull(dr[property.Name]))
                             {
-                                property.SetValue(array[i], dr[property.Name], null);
+                                property.SetValue(array[i], dr[property.Name]);
                             }
                             i++;
                         }
@@ -86,7 +86,7 @@ namespace Xin.Basic
                             {
                                 try
                                 {
-                                    property.SetValue(array[i], Convert.ChangeType(dr[property.Name], property.PropertyType), null);
+                                    property.SetValue(array[i], Convert.ChangeType(dr[property.Name], property.PropertyType));
                                 }
                                 catch (Exception e)
                                 {
@@ -120,19 +120,19 @@ namespace Xin.Basic
                     {
                         try
                         {
-                            property.SetValue(data, dr[property.Name], null);
+                            property.SetValue(data, dr[property.Name]);
                         }
                         catch (ArgumentException)
                         {
                             try
                             {
-                                property.SetValue(data, Convert.ChangeType(dr[property.Name], property.PropertyType), null);
+                                property.SetValue(data, Convert.ChangeType(dr[property.Name], property.PropertyType));
                             }
                             catch (InvalidCastException)
                             {
                                 try
                                 {
-                                    property.SetValue(data, Convert.ChangeType(dr[property.Name], Nullable.GetUnderlyingType(property.PropertyType)), null);
+                                    property.SetValue(data, Convert.ChangeType(dr[property.Name], Nullable.GetUnderlyingType(property.PropertyType)));
                                 }
                                 catch (Exception e)
                                 {
@@ -189,7 +189,7 @@ namespace Xin.Basic
                 DataRow dr = dt.NewRow();
                 foreach (PropertyInfo property in properties)
                 {
-                    dr[property.Name] = property.GetValue(data, null) ?? DBNull.Value;
+                    dr[property.Name] = property.GetValue(data) ?? DBNull.Value;
                 }
                 dt.Rows.Add(dr);
             }
