@@ -25,10 +25,6 @@ namespace Xin.Basic
         /// </summary>
         public string Password { get; private set; }
         /// <summary>
-        /// 加密
-        /// </summary>
-        public bool EnableSsl { get; private set; }
-        /// <summary>
         /// 默认实例，各项参数在配置文件中设置
         /// </summary>
         public static SmtpHelper Default { get; private set; }
@@ -38,8 +34,7 @@ namespace Xin.Basic
             string host = System.Configuration.ConfigurationManager.AppSettings["MailHost"];
             string username = System.Configuration.ConfigurationManager.AppSettings["MailUsername"];
             string password = System.Configuration.ConfigurationManager.AppSettings["MailPassword"];
-            bool enableSsl = bool.Parse(System.Configuration.ConfigurationManager.AppSettings["MailEnableSsl"]);
-            Default = new SmtpHelper(host, username, password, enableSsl);
+            Default = new SmtpHelper(host, username, password);
         }
 
         /// <summary>
@@ -48,13 +43,11 @@ namespace Xin.Basic
         /// <param name="host">服务器</param>
         /// <param name="username">用户名</param>
         /// <param name="password">密码</param>
-        /// <param name="enableSsl">加密</param>
-        public SmtpHelper(string host, string username, string password, bool enableSsl)
+        public SmtpHelper(string host, string username, string password)
         {
             Host = host;
             Username = username;
             Password = password;
-            EnableSsl = enableSsl;
         }
 
         /// <summary>
@@ -69,7 +62,7 @@ namespace Xin.Basic
             {
                 sc.Host = Host;
                 sc.Credentials = new NetworkCredential(Username, Password);
-                sc.EnableSsl = EnableSsl;
+                sc.EnableSsl = true;
 
                 MailMessage mm = new MailMessage();
                 mm.From = new MailAddress(Username);
@@ -100,7 +93,7 @@ namespace Xin.Basic
             {
                 sc.Host = Host;
                 sc.Credentials = new NetworkCredential(Username, Password);
-                sc.EnableSsl = EnableSsl;
+                sc.EnableSsl = true;
 
                 MailMessage mm = new MailMessage();
                 mm.From = new MailAddress(from);
