@@ -29,12 +29,12 @@ namespace Xin.Basic
             }
             foreach (PropertyInfo property in properties)
             {
-                System.Type propertyType = property.PropertyType;
+                Type propertyType = property.PropertyType;
                 DataColumn dc = dt.Columns[dt.Columns.IndexOf(property.Name)];
                 int i = 0;
                 if (propertyType.IsGenericType && propertyType.GetGenericTypeDefinition().Equals(typeof(Nullable<>)))
                 {
-                    System.Type underlyingType = Nullable.GetUnderlyingType(property.PropertyType);
+                    Type underlyingType = Nullable.GetUnderlyingType(property.PropertyType);
                     if (dc.DataType.Equals(underlyingType))
                     {
                         foreach (DataRow dr in dt.Rows)
@@ -48,20 +48,20 @@ namespace Xin.Basic
                     }
                     else
                     {
-                        foreach (DataRow dr in dt.Rows)
+                        try
                         {
-                            if (!Convert.IsDBNull(dr[property.Name]))
+                            foreach (DataRow dr in dt.Rows)
                             {
-                                try
+                                if (!Convert.IsDBNull(dr[property.Name]))
                                 {
                                     property.SetValue(array[i], Convert.ChangeType(dr[property.Name], underlyingType));
                                 }
-                                catch (Exception e)
-                                {
-                                    LogHelper.Logger.Debug("GetList Convert UnderlyingType Error!", e);
-                                }
+                                i++;
                             }
-                            i++;
+                        }
+                        catch (Exception e)
+                        {
+                            LogHelper.Logger.Warn("GetList Convert UnderlyingType Error!", e);
                         }
                     }
                 }
@@ -80,79 +80,25 @@ namespace Xin.Basic
                     }
                     else
                     {
-                        foreach (DataRow dr in dt.Rows)
+                        try
                         {
-                            if (!Convert.IsDBNull(dr[property.Name]))
+                            foreach (DataRow dr in dt.Rows)
                             {
-                                try
+                                if (!Convert.IsDBNull(dr[property.Name]))
                                 {
                                     property.SetValue(array[i], Convert.ChangeType(dr[property.Name], property.PropertyType));
                                 }
-                                catch (Exception e)
-                                {
-                                    LogHelper.Logger.Debug("GetList Convert Error!", e);
-                                }
+                                i++;
                             }
-                            i++;
+                        }
+                        catch (Exception e)
+                        {
+                            LogHelper.Logger.Warn("GetList Convert Error!", e);
                         }
                     }
                 }
             }
             return array.ToList();
-        }
-
-        /// <summary>
-        /// 将DataTable转换为实体类集合
-        /// </summary>
-        /// <typeparam name="T">实体类</typeparam>
-        /// <param name="dt">DataTable</param>
-        /// <returns>实体类集合</returns>
-        public static List<T> GetListO<T>(this DataTable dt) where T : class, new()
-        {
-            PropertyInfo[] properties = typeof(T).GetProperties().Where(t => dt.Columns.Contains(t.Name)).ToArray();
-            List<T> list = new List<T>();
-            foreach (DataRow dr in dt.Rows)
-            {
-                T data = new T();
-                foreach (PropertyInfo property in properties)
-                {
-                    if (!Convert.IsDBNull(dr[property.Name]))
-                    {
-                        try
-                        {
-                            property.SetValue(data, dr[property.Name]);
-                        }
-                        catch (ArgumentException)
-                        {
-                            try
-                            {
-                                property.SetValue(data, Convert.ChangeType(dr[property.Name], property.PropertyType));
-                            }
-                            catch (InvalidCastException)
-                            {
-                                try
-                                {
-                                    property.SetValue(data, Convert.ChangeType(dr[property.Name], Nullable.GetUnderlyingType(property.PropertyType)));
-                                }
-                                catch (Exception e)
-                                {
-                                    LogHelper.Logger.Debug("GetListO Convert UnderlyingType Error!", e);
-                                }
-                            }
-                            catch (Exception e)
-                            {
-                                LogHelper.Logger.Debug("GetListO Convert Error!", e);
-                            }
-                        }
-                        catch (Exception e)
-                        {
-                            LogHelper.Logger.Debug("GetListO SetValue Error!", e);
-                        }
-                    }
-                }
-                list.Add(data);
-            }
-            return list;
         }
 
         /// <summary>
@@ -174,7 +120,7 @@ namespace Xin.Basic
             }
             foreach (PropertyInfo property in properties)
             {
-                System.Type propertyType = property.PropertyType;
+                Type propertyType = property.PropertyType;
                 if (propertyType.IsGenericType && propertyType.GetGenericTypeDefinition().Equals(typeof(Nullable<>)))
                 {
                     dt.Columns.Add(property.Name, Nullable.GetUnderlyingType(propertyType));
