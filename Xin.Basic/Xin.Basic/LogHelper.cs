@@ -1,11 +1,13 @@
 ﻿using log4net;
+using log4net.Appender;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
-namespace Xin.Basic
+namespace Coding
 {
     /// <summary>
     /// log4net日志工具类
@@ -19,7 +21,7 @@ namespace Xin.Basic
 
         static LogHelper()
         {
-            log4net.Config.XmlConfigurator.ConfigureAndWatch(new FileInfo("log4net.config"));
+            log4net.Config.XmlConfigurator.ConfigureAndWatch(new FileInfo(AppDomain.CurrentDomain.BaseDirectory + "log4net.config"));
             Logger = LogManager.GetLogger("Logger");
         }
     }

@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace Xin.Basic
+namespace Coding
 {
     /// <summary>
     /// 表格
@@ -14,24 +13,24 @@ namespace Xin.Basic
         /// <summary>
         /// thead
         /// </summary>
-        public List<Row> Thead { get; set; }
+        public TPart Thead { get; set; }
         /// <summary>
         /// tbody
         /// </summary>
-        public List<Row> Tbody { get; set; }
+        public TPart Tbody { get; set; }
         /// <summary>
         /// tfoot
         /// </summary>
-        public List<Row> Tfoot { get; set; }
+        public TPart Tfoot { get; set; }
 
         /// <summary>
         /// 构造函数
         /// </summary>
         public Table()
         {
-            Thead = new List<Row>();
-            Tbody = new List<Row>();
-            Tfoot = new List<Row>();
+            Thead = new TPart(this);
+            Tbody = new TPart(this);
+            Tfoot = new TPart(this);
         }
     }
 }
