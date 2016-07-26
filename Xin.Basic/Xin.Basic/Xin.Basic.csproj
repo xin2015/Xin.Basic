@@ -73,14 +73,17 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SmtpHelper.cs" />
     <Compile Include="SqlHelper.cs" />
+    <Compile Include="Table\Table.cs" />
+    <Compile Include="Table\TCell.cs" />
+    <Compile Include="Table\TPart.cs" />
+    <Compile Include="Table\TRow.cs" />
+    <Compile Include="Table\Tsample.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="log4net.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Table\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
