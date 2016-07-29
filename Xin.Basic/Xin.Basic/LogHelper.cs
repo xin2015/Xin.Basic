@@ -19,7 +19,7 @@ namespace Xin.Basic
 
         static LogHelper()
         {
-            log4net.Config.XmlConfigurator.ConfigureAndWatch(new FileInfo("log4net.config"));
+            log4net.Config.XmlConfigurator.ConfigureAndWatch(new FileInfo(AppDomain.CurrentDomain.BaseDirectory + "log4net.config"));
             Logger = LogManager.GetLogger("Logger");
         }
     }
